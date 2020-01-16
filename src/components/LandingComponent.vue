@@ -1,6 +1,6 @@
 <template>
   <v-container class="fill-height" fluid>
-    <v-card class="mx-auto my-12" max-width="374">
+    <v-card class="mx-auto my-12" max-width="400">
       <v-card-title>byrd form </v-card-title>
 
       <v-card-text>
@@ -16,7 +16,6 @@
               :return-value.sync="dates"
               transition="scale-transition"
               offset-y
-              full-width
               min-width="290px"
             >
               <template v-slot:activator="{ on }">
@@ -30,7 +29,7 @@
               <v-date-picker v-model="dates" range scrollable color="primary">
                 <v-spacer></v-spacer>
                 <v-btn color="primary" @click="menu = false">Cancel</v-btn>
-                <v-btn color="primary" @click="$refs.menu.save(dates)">OK</v-btn>
+                <v-btn color="primary" @click="$refs.menu.save(dates);changeInDate()">OK</v-btn>
               </v-date-picker>
             </v-menu>
           </v-col>
@@ -60,6 +59,9 @@ export default {
     this.getCustomers();
   },
   methods: {
+    changeInDate(){
+      this.$store.dispatch("setDateRange",this.dates)
+    },
     getCustomers() {
       if(this.customers && this.customers.length == 0){
         this.$store.dispatch("getCustomers")
@@ -67,7 +69,6 @@ export default {
     },
     fetchOrders() {
       this.$store.dispatch("getOrders",{date : this.dates, selectedCustomer : this.selectedCustomer});
-      this.$store.dispatch("setDateRange",this.dates)
       this.$router.push('/orders')
     }
   },
